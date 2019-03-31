@@ -3,11 +3,12 @@
         "src/**/*.ts"
     ],
     "compilerOptions": {
+        "baseUrl": ".",
+        "target": "ES5",
         "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "esModuleInterop": true,
-        "target": "es6",
         "outDir": "dist",
         "sourceMap": true,
     }
