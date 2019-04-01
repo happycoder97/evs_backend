@@ -1,7 +1,7 @@
-export {Saved, Official, ShopOwner, CollectedWaste, Persistence};
+export { Saved, Official, ShopOwner, CollectedWaste, Persistence };
 
-interface Saved {
-    id: number;
+interface Saved<T> {
+    id: T;
 }
 
 interface Official {
@@ -22,13 +22,13 @@ interface CollectedWaste {
     refunded: string;
 }
 
-interface Persistence {
-    shop_owner_login(username: string, password: string): (ShopOwner & Saved) | undefined;
-    shop_owner_signup(shop_owner: ShopOwner): Saved;
+interface Persistence<T> {
+    shop_owner_get(username: string): Promise<(ShopOwner & Saved<T>) | undefined>;
+    shop_owner_signup(shop_owner: ShopOwner): Promise<Saved<T>>;
 
-    official_login(username: string, password: string): (Official & Saved) | undefined;
-    official_signup(official: Official): Saved;
+    official_get(username: string): Promise<(Official & Saved<T>) | undefined>;
+    official_signup(official: Official): Promise<Saved<T>>;
 
-    collected_waste_save(collected_waste: CollectedWaste): Saved;
-    collected_waste_get_all(shop_owner_id: number|undefined): CollectedWaste[];
+    collected_waste_save(shop_owner: Saved<T>, collected_waste: CollectedWaste): Promise<Saved<T>>;
+    collected_waste_get_all(shop_owner: Saved<T> | undefined): Promise<Array<Saved<T> & CollectedWaste>>;
 }

@@ -4,7 +4,7 @@
     ],
     "compilerOptions": {
         "baseUrl": ".",
-        "target": "ES5",
+        "target": "ES6",
         "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": true,
