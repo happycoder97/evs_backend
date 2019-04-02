@@ -1,0 +1,122 @@
+<html>
+<div class=card>
+    <div class="card-title">Collected Items: {{user}}</div>
+    <div class="sh-list">
+        {{#each wastes}}
+        <div class="sh-list-item">
+            <div class="sh-list-icon"><i class="fa fa-group"></i></div>
+            <div class="sh-list-content">
+                <div class="sh-list-item-title">{{title}}</div>
+                <div class="sh-list-item-sub-title">MRP: {{mrp}} Refunded: {{refunded}}</div>
+            </div>
+            <div class=sufix><i class="fa fa-angle-right"></i></div>
+        </div>
+        {{~/each}}
+        <form method=POST action="/api/wastes">
+            <h1>Submit New</h1>
+            <input name=title placeholder="title" /><br>
+            <input name=mrp placeholder="mrp" /><br>
+            <input name=refunded placeholder="refunded" /><br>
+            <input type=submit value=Submit>
+        </form>
+    </div>
+</div>
+
+<style>
+    @import url("https://fonts.googleapis.com/css?family=Roboto");
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        background-color: white;
+        width: auto;
+        box-sizing: content-box;
+        padding: 40px 24px;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        margin: 50px auto;
+        max-width: 400px;
+    }
+
+    .card .card-title {
+        border-left: 8px solid #fd2e76;
+        padding: 16px 30px;
+        margin-left: -24px;
+        font-size: 1.5em;
+        font-weight: 400;
+        margin-bottom: 24px;
+    }
+
+    .sh-list {
+        min-width: 340px;
+    }
+
+    .sh-list .sh-list-item {
+        padding: 16px;
+        cursor: pointer;
+    }
+
+    .sh-list .sh-list-item:hover {
+        background-color: #f3f3f3;
+    }
+
+    .sh-list .sh-list-item .sh-list-content,
+    .sh-list .sh-list-item .sh-list-icon {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .sh-list .sh-list-item .sh-list-item-title {
+        color: #2C2D30;
+        padding: 2px 0;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .sh-list .sh-list-item .sh-list-item-sub-title {
+        color: #717274;
+        font-weight: 200;
+        font-size: 15px;
+    }
+
+    .sh-list .sh-list-item .sh-list-icon {
+        margin-right: 10px;
+        background-color: #d2d2d2;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        line-height: 42px;
+        font-size: 1.2em;
+        font-weight: 100;
+        color: white;
+        border-radius: 50%;
+    }
+
+    .sh-list .sh-list-item .sh-list-icon.add {
+        background-color: #fd2e76;
+    }
+
+    .sh-list .sh-list-item .sufix {
+        display: inline-block;
+        font-size: 24px;
+        margin-right: 24px;
+        float: right;
+    }
+
+    h4 {
+        display: block;
+        box-sizing: border-box;
+        height: 48px;
+        padding: 16px;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.54);
+    }
+</style>
+
+</html>

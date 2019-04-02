@@ -10,6 +10,7 @@ import cookie_session from "cookie-session";
 import body_parser from "body-parser";
 import multer from "multer";
 
+import hb from "express-handlebars";
 dotenv.config();
 
 declare global {
@@ -35,8 +36,16 @@ async function main() {
 
     const upload = multer({ dest: "uploads/" });
 
+    app.engine("handlebars", hb());
+
+    app.set('view engine', 'handlebars');
+    app.set('views', __dirname + '/public'); // you can change '/views' to '/public',
+
+
     app.use(body_parser.json());
     app.use(body_parser.urlencoded({ extended: true }));
+
+    app.use(express.static("public"));
 
     app.set("trust proxy", 1); // trust first proxy
 
@@ -64,6 +73,20 @@ async function main() {
         next();
     });
 
+    app.get("/", (req, res) => {
+        if (req.user) {
+            res.redirect("/wastes");
+        } else {
+            res.redirect("/login.html");
+        }
+    });
+
+    app.get("/wastes", async (req, res) => {
+        const wastes = await persistence.collected_waste_get_all(undefined);
+        console.log(wastes);
+        res.render("wastes", { user: req.user.val.name, wastes });
+    });
+
     app.get("/api", (req: Request, res: Response) => {
         req.session.username = "admin1";
         res.send("EVS Project Backend REST API");
@@ -79,6 +102,7 @@ async function main() {
             return;
         }
 
+        console.log(username);
 
         const shop_owner = await persistence.shop_owner_get(username);
         if (shop_owner && shop_owner.password === password) {
@@ -89,6 +113,7 @@ async function main() {
             return;
         }
 
+        console.log(username);
         const official = await persistence.official_get(username);
         if (official && official.password === password) {
             req.session.username = username;
@@ -96,6 +121,7 @@ async function main() {
                 msg: `Logged in as official.`,
             });
         }
+        res.redirect("/login.html");
 
     });
 
@@ -159,19 +185,19 @@ async function main() {
         });
     });
 
-    app.post("/api/wastes", upload.single("image"), async (req: Request, res: Response) => {
+    app.post("/api/wastes", async (req: Request, res: Response) => {
         if (!req.user) {
             res.status(403).send({ err: "Please login to view this page." });
             return;
         }
 
-        if (req.user.is_official) {
-            res.status(403).send({ err: "Only shop owners can submit wastes." });
-            return;
-        }
+        // if (req.user.is_official) {
+        //     res.status(403).send({ err: "Only shop owners can submit wastes." });
+        //     return;
+        // }
 
 
-        const { mrp, refunded } = req.body;
+        const { title, mrp, refunded } = req.body;
         if (!mrp || !refunded) {
             res.status(400).send({
                 err: "Expected mrp, refunded",
@@ -179,12 +205,9 @@ async function main() {
             return;
         }
 
-        const saved = await persistence.collected_waste_save(req.user.val, { mrp, refunded });
+        const saved = await persistence.collected_waste_save(req.user.val, { title, mrp, refunded });
 
-        const new_path = req.file.destination + "/" + saved.id.toHexString();
-        await fs.rename(req.file.path, new_path, (err) => {
-            if (err) { console.log(err); }
-        });
+        res.redirect("/wastes");
     });
 
     const https_server = https.createServer(credentials, app);

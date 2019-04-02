@@ -18,6 +18,7 @@ interface ShopOwner {
 }
 
 interface CollectedWaste {
+    title: string,
     mrp: string;
     refunded: string;
 }
